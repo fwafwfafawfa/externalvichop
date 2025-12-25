@@ -14,7 +14,7 @@ local TeleportService = game:GetService("TeleportService")
 local Workspace = game:GetService("Workspace")
 
 local PLACE_ID = 1537690962
-local ALT = Players.LocalPlayer.Name
+local ALT_NAME = Players.LocalPlayer.Name
 local CHECK_DELAY = 1.5
 
 local reported_servers = {}
