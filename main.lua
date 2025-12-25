@@ -137,18 +137,18 @@ while true do
             if SendToDiscord(game.JobId) then
                 break
             end
-            task.wait(0.5)
+            task.wait(1)
         end
         
         print("[Alt] Reported! Moving to next server...")
         task.wait(1)
         ServerHop()
         
-        task.wait(1)
+        task.wait(2)
     else
         print("[Alt] No Vicious here, hopping...")
         ServerHop()
         
-        task.wait(1)
+        task.wait(2)
     end
 end
