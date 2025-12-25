@@ -144,11 +144,11 @@ while true do
         task.wait(1)
         ServerHop()
         
-        task.wait(2)
+        task.wait(1.5)
     else
         print("[ALT] No Vicious here, hopping...")
         ServerHop()
         
-        task.wait(2)
+        task.wait(1.5)
     end
 end
