@@ -1,6 +1,6 @@
 --[[
-    VICHOP Alt Script v2.0
-    Reports Vicious and continues Alting!
+    VICHOP Scout Script v2.0
+    Reports Vicious and continues scouting!
     
     Change WEBHOOK_URL below to your Discord webhook!
 ]]
@@ -14,20 +14,20 @@ local TeleportService = game:GetService("TeleportService")
 local Workspace = game:GetService("Workspace")
 
 local PLACE_ID = 1537690962
-local ALT_NAME = Players.LocalPlayer.Name
+local SCOUT_NAME = Players.LocalPlayer.Name
 local CHECK_DELAY = 1.5
 
 local reported_servers = {}
 
 print("========================================")
-print("[ALT] Started: " .. ALT_NAME)
+print("[ALT] Started: " .. SCOUT_NAME)
 print("[ALT] Mode: Report and Continue")
 print("[ALT] JobId: " .. game.JobId)
 print("========================================")
 
 local function SendToDiscord(jobId)
     if reported_servers[jobId] then
-        print("[Alt] Already reported this server, skipping...")
+        print("[SCOUT] Already reported this server, skipping...")
         return true
     end
     
@@ -40,7 +40,7 @@ local function SendToDiscord(jobId)
                 Headers = {["Content-Type"] = "application/json"},
                 Body = HttpService:JSONEncode({
                     content = jobId,
-                    username = "Alt: " .. Alt_NAME
+                    username = "ALT: " .. SCOUT_NAME
                 })
             })
         end
@@ -48,9 +48,9 @@ local function SendToDiscord(jobId)
     
     if success then
         reported_servers[jobId] = true
-        print("[Alt] Sent JobId to Discord!")
+        print("[ALT] Sent JobId to Discord!")
     else
-        warn("[Alt] Failed to send webhook")
+        warn("[ALT] Failed to send webhook")
     end
     
     return success
@@ -71,7 +71,7 @@ local function FindVicious()
 end
 
 local function ServerHop()
-    print("[Alt] Hopping to new server...")
+    print("[ALT] Hopping to new server...")
     
     local api = "https://games.roblox.com/v1/games/" .. PLACE_ID .. "/servers/0?sortOrder=1&excludeFullGames=true&limit=100"
     
@@ -110,8 +110,8 @@ end
 
 TeleportService.TeleportInitFailed:Connect(function(player, result, errorMessage)
     if player == Players.LocalPlayer then
-        warn("[Alt] Teleport failed: " .. tostring(errorMessage))
-        task.wait(1)
+        warn("[ALT] Teleport failed: " .. tostring(errorMessage))
+        task.wait(3)
         ServerHop()
     end
 end)
@@ -137,16 +137,16 @@ while true do
             if SendToDiscord(game.JobId) then
                 break
             end
-            task.wait(1)
+            task.wait(0.5)
         end
         
-        print("[Alt] Reported! Moving to next server...")
+        print("[ALT] Reported! Moving to next server...")
         task.wait(1)
         ServerHop()
         
         task.wait(2)
     else
-        print("[Alt] No Vicious here, hopping...")
+        print("[ALT] No Vicious here, hopping...")
         ServerHop()
         
         task.wait(2)
