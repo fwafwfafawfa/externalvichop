@@ -2248,7 +2248,7 @@ local function synsaveinstance(CustomOptions, CustomOptions2)
 	local currentstr, currentsize, totalsize, chunks = "", 0, 0, table.create(1)
 	local savebuffer, savebuffer_size = {}, 1
 	local header =
-		'<!-- Saved by Buko0365 dm to copy games --><roblox version="4">'
+		'<roblox version="4">'
 
 	local StatusText
 
@@ -3736,9 +3736,7 @@ local function synsaveinstance(CustomOptions, CustomOptions2)
 											end
 										end
 
-										value = "-- Saved by Buko0365 dm to copy games\n\n"
-											.. (hasLinkedSource and "-- Original Source: https://assetdelivery.roblox.com/v1/asset/?" .. (LinkedSource_type or "id") .. "=" .. (LinkedSource or LinkedSource_Url) .. "\n\n" or "")
-											.. value
+										value = value
 									end
 								end
 								value = XML_Descriptors.__PROTECTEDSTRING(value)
@@ -3930,8 +3928,8 @@ local function synsaveinstance(CustomOptions, CustomOptions2)
 						RecoveredScripts
 					) .. "\n" or "")
 					.. [[
-		Thank you for using BetterSaveinstance (Fork of UniversalSynSaveInstance). Their discord: https://discord.gg/wx4ThpAsmw.
-
+		Thank you for using Uncopylocked service https://discord.gg/57yHDNXFJU
+	
 		If you didn't save in Binary (rbxl) - it's recommended to save the game right away to take advantage of the binary format & to preserve values of certain properties if you used IgnoreDefaultProperties setting (as they might change in the future).
 		You can do that by going to FILE -> Save to File As -> Make sure File Name ends with .rbxl -> Save
 
@@ -3993,7 +3991,7 @@ local function synsaveinstance(CustomOptions, CustomOptions2)
 		end
 
 		savebuffer[savebuffer_size] =
-			"</roblox><!-- Saved by Buko0365 dm to copy games -->"
+			"</roblox>"
 		savebuffer_size += 1
 		save_cache(true)
 		do
