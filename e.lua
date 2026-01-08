@@ -5,44 +5,38 @@ local BeequipTypes = require(ReplicatedStorage.Beequips.BeequipTypes)
 local WaxTypes = require(ReplicatedStorage.WaxTypes)
 
 -- !!! CONFIGURATION !!!
--- List the items you want here. It will generate QUANTITY of EACH.
-local TARGET_LIST = {
-    "Whistle", 
-    "Poinsettia", 
-    "Elf Cap",
-    "Candy Ring" -- Added this too just in case
+local TARGETS = {
+    ["Whistle"] = 10,
+    ["Poinsettia"] = 10,
+    ["Elf Cap"] = 10
 }
 
-local QUANTITY = 50      -- How many of EACH item to generate
-local CAUSTIC_COUNT = 5  -- How many Caustic Waxes to apply (0 to 5)
-local CAUSTIC_POWER = 50 -- Power Level (1 = Normal, 50 = God Stats)
+local CAUSTIC_COUNT = 5 -- How many Waxes to apply (0-5)
 -- !!!!!!!!!!!!!!!!!!!!!
 
-print("--- ACTIVATING MULTI-ITEM GENERATOR ---")
+print("--- ACTIVATING STANDARD GENERATOR (NO POWER HACKS) ---")
 
--- 1. APPLY CAUSTIC POWER HACK
-local CausticID = nil
+-- 1. GET CAUSTIC WAX ID (NO MODIFICATION)
+-- We just find the ID. We do NOT touch the power.
+local CausticID = 1
 for id, data in pairs(WaxTypes.TypeByID) do
     if string.find(data.Name, "Caustic") then
         CausticID = id
-        data.Upgrades = CAUSTIC_POWER -- Apply the Power Config
         break
     end
 end
-if not CausticID then CausticID = 3 end
 
--- 2. PREPARE THE FAKE ITEMS
+-- 2. GENERATOR LOOP
 local FakeItemsList = {}
 local Rng = Random.new() 
+local GlobalIndex = 0 
 
--- Loop through every item in your config list
-for _, itemName in pairs(TARGET_LIST) do
+for itemName, quantity in pairs(TARGETS) do
     
     local RealDefinition = BeequipTypes.Get(itemName)
     
-    -- Fallback if item name is wrong
+    -- Fallback
     if not RealDefinition then
-        warn("Could not find definition for: " .. itemName)
         RealDefinition = {
             Name = itemName, DisplayName = itemName, Description = "Injected",
             Rarity = "Legendary", Modifiers = {}, Upgrades = {}, StorageSize = 1,
@@ -50,13 +44,16 @@ for _, itemName in pairs(TARGET_LIST) do
         }
     end
 
-    -- DEFINITION CONSTRUCTOR (Prevents Crashing on simple items)
+    -- SAFE DEFINITION CONSTRUCTOR
+    -- Even without power hacks, we must clone the definition
+    -- so the items don't share memory and crash the UI.
     local function GetSafeDef()
         local copy = {}
-        -- Copy Visuals
-        for k,v in pairs(RealDefinition) do copy[k] = v end
         
-        -- Copy Upgrades
+        -- Copy Visuals
+        for k, v in pairs(RealDefinition) do copy[k] = v end
+
+        -- Copy Upgrades (Isolated Copy)
         copy.Upgrades = {}
         if RealDefinition.Upgrades then
             for _, v in ipairs(RealDefinition.Upgrades) do
@@ -64,7 +61,7 @@ for _, itemName in pairs(TARGET_LIST) do
             end
         end
 
-        -- INJECT SAFETY STAT (Prevents "nil index" crash if stats run out)
+        -- Safety Stat: Prevents "nil index" error if item runs out of stats
         table.insert(copy.Upgrades, {
             Type = "Convert Rate", Amount = 1.01, Weight = 99999999
         })
@@ -73,15 +70,15 @@ for _, itemName in pairs(TARGET_LIST) do
         return copy
     end
 
-    print("Generating " .. QUANTITY .. " x " .. itemName)
+    print("Generating " .. quantity .. " x " .. itemName)
 
-    for i = 1, QUANTITY do
+    for i = 1, quantity do
+        GlobalIndex = GlobalIndex + 1
         local myUserId = game.Players.LocalPlayer.UserId
-        local creationId = 300000 + i + (#FakeItemsList * 1000) -- Unique IDs
+        local creationId = 500000 + GlobalIndex
         local randomId = Rng:NextInteger(1, 9007199254740991)
-        local timeNow = os.time()
-
-        -- Apply Waxes
+        
+        -- Apply Waxes (Normal Game Logic)
         local waxHistory = {}
         for _ = 1, CAUSTIC_COUNT do
             table.insert(waxHistory, {
@@ -92,13 +89,13 @@ for _, itemName in pairs(TARGET_LIST) do
         end
 
         local rawItem = {
-            ["T"] = itemName, -- Set the specific name
+            ["T"] = itemName,
             ["Q"] = 1, 
-            ["S"] = Rng:NextInteger(1, 2199023255551), 
+            ["S"] = Rng:NextInteger(1, 2199023255551),
             ["OS"] = nil,
-            ["IDs"] = { myUserId, creationId, randomId, timeNow },
-            ["UC"] = 0, 
-            ["RC"] = 0, 
+            ["IDs"] = { myUserId, creationId, randomId, os.time() },
+            ["UC"] = 0,
+            ["RC"] = 0,
             ["W"] = waxHistory, 
             ["TC"] = 0
         }
@@ -108,14 +105,16 @@ for _, itemName in pairs(TARGET_LIST) do
         -- Assign Safe Definition
         rawItem.GetTypeDef = function() return GetSafeDef() end
         
-        -- Visual Trick
+        -- VISUAL TRICK:
+        -- Returns 0, so UI draws 5 Empty Stars. 
+        -- Real stats come from the ["W"] table above.
         rawItem.GetWaxUseCount = function() return 0 end
         
         table.insert(FakeItemsList, rawItem)
     end
 end
 
--- 3. HOOK THE STAT CACHE
+-- 3. HOOK STAT CACHE
 if not getgenv().OldStatGet then
     getgenv().OldStatGet = ClientStatCache.Get
 end
@@ -150,6 +149,7 @@ task.spawn(function()
     local success, menuScript = pcall(function() return require(ReplicatedStorage.Gui.BeequipMenus) end)
     if success and menuScript then
         if menuScript.UpdateAll then pcall(function() menuScript.UpdateAll() end) end
+        
         local storageMenu = menuScript.GetByName and menuScript.GetByName("Beequip Storage")
         if storageMenu and storageMenu.Open then
             pcall(function() storageMenu:Update() end)
@@ -157,4 +157,4 @@ task.spawn(function()
     end
 end)
 
-print("SUCCESS! Generated multiple item types.")
+print("SUCCESS! Generated items with standard stats.")
