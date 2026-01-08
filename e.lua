@@ -7,7 +7,7 @@ local WaxTypes = require(ReplicatedStorage.WaxTypes)
 -- !!! CONFIGURATION !!!
 local TARGET_NAME = "Candy Ring"
 local QUANTITY = 50
-local CAUSTIC_COUNT = 1 -- How many Caustic Waxes to apply (0 to 5)
+local CAUSTIC_COUNT = 5 -- How many Caustic Waxes to apply (0 to 5)
 -- !!!!!!!!!!!!!!!!!!!!!
 
 print("--- ACTIVATING 5 POT CUSTOM BEEQUIPS ---")
