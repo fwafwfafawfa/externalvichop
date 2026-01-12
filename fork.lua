@@ -3,33 +3,6 @@
 --!divine-intellect
 -- https://discord.gg/wx4ThpAsmw
 
--- SYNAPSE COMPATIBILITY LAYER FOR YOUR EXECUTOR
-if not getgenv().SynFixed then
-    getgenv().SynFixed = true
-    
-    -- Fix jsonencode service lookup
-    if not game:GetService("jsonencode") then
-        local HttpService = game:GetService("HttpService")
-        game.jsonencode = HttpService.JSONEncode
-        game.jsondecode = HttpService.JSONDecode
-    end
-    
-    -- Fix HttpGet on DataModel
-    local mt = getrawmetatable(game)
-    local oldIndex = mt.__index
-    setreadonly(mt, false)
-    mt.__index = function(self, key)
-        if key == "HttpGet" then
-            return game.HttpGet
-        end
-        return oldIndex(self, key)
-    end
-    setreadonly(mt, true)
-end
-local function string_find(s, pattern)
-	return string.find(s, pattern, nil, true)
-end
-
 local function ArrayToDict(t, hydridMode, valueOverride, typeStrict)
 	local tmp = {}
 
