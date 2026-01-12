@@ -1,8 +1,8 @@
+print("e")
 --!native
 --!optimize 2
 --!divine-intellect
 -- https://discord.gg/wx4ThpAsmw
-
 local function ArrayToDict(t, hydridMode, valueOverride, typeStrict)
 	local tmp = {}
 
