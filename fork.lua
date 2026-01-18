@@ -3924,7 +3924,7 @@ local function synsaveinstance(CustomOptions, CustomOptions2)
 						RecoveredScripts
 					) .. "\n" or "")
 					.. [[
-		Thank you for using Uncopylocked service
+		Thank you for using UniversalSynSaveInstance (Join to Copy Games) https://discord.gg/wx4ThpAsmw. We have removed text from start of each script so it looks better but we do credit original creator of this script, all credits to, UniversalSynSaveInstance https://discord.gg/wx4ThpAsmw, and fork used https://github.com/Devraj2010isme/BetterSaveinstance 
 	
 		If you didn't save in Binary (rbxl) - it's recommended to save the game right away to take advantage of the binary format & to preserve values of certain properties if you used IgnoreDefaultProperties setting (as they might change in the future).
 		You can do that by going to FILE -> Save to File As -> Make sure File Name ends with .rbxl -> Save
