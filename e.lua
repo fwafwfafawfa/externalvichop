@@ -6,7 +6,7 @@ local WaxTypes = require(ReplicatedStorage.WaxTypes)
 
 -- !!! CONFIGURATION !!!
 local TARGETS = {
-    { Name = "Kazoo", Quantity = 50 },
+    { Name = "Beesmas Top", Quantity = 50 },
     { Name = "Poinsettia", Quantity = 50 },
     { Name = "Elf Cap", Quantity = 50 }
 }
@@ -19,7 +19,7 @@ print("--- ACTIVATING MULTI-ITEM 5 POT CUSTOM GENERATOR ---")
 -- 1. GET CAUSTIC WAX ID
 local CausticID = 1
 for id, data in pairs(WaxTypes.TypeByID) do
-    if string.find(data.Name, "Caustic") then
+    if string.find(data.Name, "Debug") then
         CausticID = id
         break
     end
